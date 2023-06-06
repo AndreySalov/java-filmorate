@@ -9,14 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-private final static Logger log=LoggerFactory.getLogger(FilmController.class);
+
 
 @RestController
 public class FilmController {
     private final Map<Integer, Film> films = new HashMap<>();
     private final FilmValidation filmValidation = new FilmValidation();
     private int currentId;
-
+    private final static Logger log=LoggerFactory.getLogger(FilmController.class);
     @GetMapping("/films")
     public List<Film> getAllUsers() {
         return new ArrayList<>(films.values());
