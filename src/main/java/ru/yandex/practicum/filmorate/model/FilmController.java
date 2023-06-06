@@ -9,12 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+private final static Logger log=LoggerFactory.getLogger(FilmController.class);
+
 @RestController
 public class FilmController {
-    private final Map<Integer,Film> films = new HashMap<>();
+    private final Map<Integer, Film> films = new HashMap<>();
     private final FilmValidation filmValidation = new FilmValidation();
     private int currentId;
-    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+
     @GetMapping("/films")
     public List<Film> getAllUsers() {
         return new ArrayList<>(films.values());
@@ -23,9 +25,9 @@ public class FilmController {
     @PostMapping(value = "/films")
     public Film create(@RequestBody Film film) {
         filmValidation.valid(film);
-        int newId =getNewId();
+        int newId = getNewId();
         film.setId(newId);
-        films.put(newId,film);
+        films.put(newId, film);
         log.info("Добавлен фильм id=" + newId);
         return film;
     }
@@ -36,12 +38,12 @@ public class FilmController {
             filmValidation.valid(film);
             films.put(film.getId(), film);
             log.info("Изменен фильм c id=" + film.getId());
-        }
-        else
-            throw  new ValidationExeption("Фильм с таким id не найден");
+        } else
+            throw new ValidationExeption("Фильм с таким id не найден");
         return film;
     }
-    private int getNewId(){
+
+    private int getNewId() {
         return ++currentId;
     }
 
