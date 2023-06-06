@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import lombok.Data;
 import lombok.NonNull;
-import lombok.AllArgsConstructor;
 
 @Data
 public class Film {
