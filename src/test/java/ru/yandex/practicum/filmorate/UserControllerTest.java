@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -21,6 +20,7 @@ import java.util.Set;
 public class UserControllerTest {
     private UserController userController;
     private Validator validator;
+
     @BeforeEach
     public void start() {
         userController = new UserController();
@@ -31,19 +31,19 @@ public class UserControllerTest {
 
     @Test
     void createValidUser() {
-        User newUser = userController.create(new User(0,"test@test", "login", "name", LocalDate.now()));
+        User newUser = userController.create(new User(0, "test@test", "login", "name", LocalDate.now()));
         assertNotNull(newUser.getId());
     }
 
     @Test
     void createNotValidUser() {
-        assertThrows(ValidationException.class, () -> userController.create(new User(0,"test", "login", "name", LocalDate.now())));
-        assertThrows(ValidationException.class, () -> userController.create(new User(0,"test@test", "login", "name", LocalDate.now().plusDays(1))));
-        User newUser =  new User(0,"test", "login", "name", LocalDate.now());
-        newUser =  new User(0,"test@test", "", "name", LocalDate.now());
+        assertThrows(ValidationException.class, () -> userController.create(new User(0, "test", "login", "name", LocalDate.now())));
+        assertThrows(ValidationException.class, () -> userController.create(new User(0, "test@test", "login", "name", LocalDate.now().plusDays(1))));
+        User newUser = new User(0, "test", "login", "name", LocalDate.now());
+        newUser = new User(0, "test@test", "", "name", LocalDate.now());
         Set<ConstraintViolation<User>> violations = validator.validate(newUser);
         assertFalse(violations.isEmpty());
-        newUser =  new User(0,"test@test", "а а", "name", LocalDate.now());
+        newUser = new User(0, "test@test", "а а", "name", LocalDate.now());
         violations = validator.validate(newUser);
         assertFalse(violations.isEmpty());
 

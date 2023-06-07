@@ -11,7 +11,7 @@ import javax.validation.ValidatorFactory;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FilmControllerTest {
     private FilmController filmController = new FilmController();
     private Validator validator;
+
     @BeforeEach
     void start() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -30,22 +31,22 @@ public class FilmControllerTest {
 
     @Test
     void createValidFilm() {
-        Film newFilm = new Film(0,"FilmName", "Description", LocalDate.now(), 100);
+        Film newFilm = new Film(0, "FilmName", "Description", LocalDate.now(), 100);
         assertNotNull(newFilm.getId());
     }
 
     @Test
     void createNotValidFilm() {
-        Film newFilm = new Film(0,"", "Description", LocalDate.now(), 100);
+        Film newFilm = new Film(0, "", "Description", LocalDate.now(), 100);
         Set<ConstraintViolation<Film>> violations = validator.validate(newFilm);
         assertFalse(violations.isEmpty());
-        newFilm = new Film(0,"film", "a".repeat(201), LocalDate.now(), 100);
+        newFilm = new Film(0, "film", "a".repeat(201), LocalDate.now(), 100);
         violations = validator.validate(newFilm);
         assertFalse(violations.isEmpty());
-        newFilm = new Film(0,"film", "a", LocalDate.now(), 0);
+        newFilm = new Film(0, "film", "a", LocalDate.now(), 0);
         violations = validator.validate(newFilm);
         assertFalse(violations.isEmpty());
-        assertThrows(Exception.class, () -> filmController.create(new Film(0,"film", "a", LocalDate.of(1812, 10, 5), 100)));
+        assertThrows(Exception.class, () -> filmController.create(new Film(0, "film", "a", LocalDate.of(1812, 10, 5), 100)));
     }
 
 }
