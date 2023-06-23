@@ -1,53 +1,70 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validation.UserValidation;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 
 @RestController
+@RequestMapping("/users")
+@Slf4j
 public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    private final UserValidation userValidation = new UserValidation();
-    private final Logger log = LoggerFactory.getLogger(UserController.class);
-    private int currentId;
 
-    @GetMapping("/users")
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        List<User> usersList = userService.getAllUsers();
+        log.debug("Количество пользователей :" + usersList.size());
+        return usersList;
     }
 
-    @PostMapping(value = "/users")
-    public User create(@RequestBody @Valid User user) {
-        userValidation.valid(user);
-        int newId = getNewId();
-        user.setId(newId);
-        users.put(newId, user);
-        log.info("Добавлен пользователь. id=" + newId);
-        return user;
+    @GetMapping("/{userId}")
+    User getUser(@PathVariable int userId) {
+        return userService.getUser(userId);
     }
 
-    @PutMapping(value = "/users")
-    public User updateUser(@RequestBody @Valid User user) {
-        if (users.containsKey(user.getId())) {
-            userValidation.valid(user);
-            users.put(user.getId(), user);
-            log.info("Изменен пользователь c id=" + user.getId());
-        } else
-            throw new ValidationException("Пользователь с таким id не найден");
-        return user;
+    @PostMapping
+    public User createUser(@Valid @RequestBody User user) {
+        User savedUser = userService.create(user);
+        log.debug("Добавлен пользователь :" + savedUser);
+        return savedUser;
     }
 
-    private int getNewId() {
-        return ++currentId;
+    @PutMapping
+    public User putUser(@Valid @RequestBody User user) {
+        User savedUser = userService.update(user);
+        log.debug("Изменен пользователь :" + savedUser);
+        return savedUser;
+    }
+
+    @GetMapping("/{userId}/friends")
+    public List<User> getFriends(@PathVariable int userId) {
+        return userService.getFriends(userId);
+    }
+
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public List<User> getFriendsOtherUser(@PathVariable int userId, @PathVariable int otherId) {
+        return userService.getFriendsOtherUser(userId, otherId);
+    }
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@PathVariable int userId, @PathVariable int friendId) {
+        userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void deleteFriend(@PathVariable int userId, @PathVariable int friendId) {
     }
 }
+
