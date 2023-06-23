@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.validation.FilmValidation;
 import java.time.LocalDate;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmControllerTest {
     @Test
@@ -20,7 +20,7 @@ class FilmControllerTest {
         FilmService filmService = new FilmService();
         FilmValidation filmValidation = new FilmValidation();
         FilmController filmController = new FilmController(userService, filmService);
-        Film film = new Film(1, "Pirates", "about pirates", LocalDate.of(1894, 5, 8), 124,new HashSet<>());
+        Film film = new Film(1, "Pirates", "about pirates", LocalDate.of(1894, 5, 8), 124, new HashSet<>());
         assertThrows(ValidationException.class, () -> filmValidation.valid(film));
     }
 }
