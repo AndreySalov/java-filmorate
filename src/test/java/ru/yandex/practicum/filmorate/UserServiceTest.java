@@ -20,7 +20,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void TestCreateAndGet() {
+    void testCreateAndGet() {
         User user1 = new User("andr", "", 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29));
         userService.create(user1);
         User user2 = userService.getUser(1);
