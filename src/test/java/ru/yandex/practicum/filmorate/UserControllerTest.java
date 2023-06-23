@@ -13,14 +13,14 @@ import java.util.HashSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UserControllerTest {
+class UserControllerTest {
     UserValidation userValidation = new UserValidation();
 
     @Test
     void validateUserLogin() {
         UserService userService = new UserService();
         UserController userController = new UserController(userService);
-        User user = new User(1, "srg@yandex.ru", "test_login", "test_name", LocalDate.of(1987, 10, 10), new HashSet<>());
+        User user = new User("andr", "Andrey", 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29), new HashSet<>());
         assertThrows(ValidationException.class, () -> userValidation.valid(user));
     }
 
@@ -28,7 +28,8 @@ public class UserControllerTest {
     void validateUserNameIsBlank() {
         UserService userService = new UserService();
         UserController userController = new UserController(userService);
-        User user = new User(1, "srg@yandex.ru", "test_login", "test_name", LocalDate.of(1987, 10, 10), new HashSet<>());
+        User user = new User("andr", "", 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29), new HashSet<>());
+        userValidation.valid(user);
         assertEquals(user.getName(), user.getLogin());
     }
 
@@ -36,9 +37,8 @@ public class UserControllerTest {
     void validateUserNameIsNull() {
         UserService userService = new UserService();
         UserController userController = new UserController(userService);
-        User user = new User(1, "srg@yandex.ru", "test_login", null, LocalDate.of(1987, 10, 10), new HashSet<>());
+        User user = new User("andr", null, 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29), new HashSet<>());
+        userValidation.valid(user);
         assertEquals(user.getName(), user.getLogin());
     }
-
-
 }
