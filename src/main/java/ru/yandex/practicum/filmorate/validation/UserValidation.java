@@ -21,7 +21,7 @@ public class UserValidation {
         }
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.info("Ошибка при проверка пользователя. Неверная дата рождения");
-            throw new ValidationException("Дата рождения не может быть в будушем.");
+            throw new ValidationException("Дата рождения не может быть в будущем.");
         }
     }
 }
