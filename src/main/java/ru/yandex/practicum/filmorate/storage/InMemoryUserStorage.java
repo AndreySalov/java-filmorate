@@ -1,18 +1,16 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 
 import java.util.*;
-
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 @Component
 @Getter
@@ -50,7 +48,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(user.getId())) {
             userValidation.valid(user);
             users.put(user.getId(), user);
-            if (user.getFriends()==null)
+            if (user.getFriends() == null)
                 user.setFriends(new HashSet<>());
             log.info("Изменен пользователь c id=" + user.getId());
         } else
