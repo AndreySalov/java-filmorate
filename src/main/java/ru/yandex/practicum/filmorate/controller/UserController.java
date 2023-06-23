@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.List;
 
 @RestController
