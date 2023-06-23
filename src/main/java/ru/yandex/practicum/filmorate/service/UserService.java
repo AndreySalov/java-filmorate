@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class UserService {
     @Autowired
-    private UserStorage inMemoryUserStorage=new InMemoryUserStorage();
+    private final UserStorage inMemoryUserStorage = new InMemoryUserStorage();
 
     public List<User> getAllUsers() {
         List<User> usersList = inMemoryUserStorage.getAllUsers();
