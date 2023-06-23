@@ -33,7 +33,7 @@ public class ErrorHandler {
     public ResponseEntity<Map<String, Integer>> handelInvalidBirthdayException(final ValidationException e) {
         log.info("400 {}", e.getMessage());
         return new ResponseEntity<>(
-                Map.of(e.getMessage(), 404),
+                Map.of(e.getMessage(), 400),
                 HttpStatus.BAD_REQUEST
         );
     }

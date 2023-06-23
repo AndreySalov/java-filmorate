@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.validation.FilmValidation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
+    private final FilmValidation filmValidation = new FilmValidation();
     @Autowired
     private UserService userService;
     @Autowired
@@ -28,19 +30,18 @@ public class FilmService {
     }
 
     public Film updateFilm(Film film) {
+        filmValidation.valid(film);
         return inMemoryFilmStorage.updateFilm(film);
     }
 
     public Film createFilm(Film film) {
+        filmValidation.valid(film);
         return inMemoryFilmStorage.create(film);
     }
 
 
     public void addLike(int userId, int filmId) {
         Film film = getFilm(filmId);
-        if (film.getLikes().contains(userId)) {
-            deleteLike(userId, filmId);
-        }
         User user = userService.getUser(userId);
         inMemoryFilmStorage.addLike(film, user);
     }

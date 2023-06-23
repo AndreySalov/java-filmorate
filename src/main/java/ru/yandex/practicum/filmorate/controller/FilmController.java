@@ -21,7 +21,6 @@ import java.util.List;
 public class FilmController {
 
     private final UserService userService;
-    private final FilmValidation filmValidation = new FilmValidation();
     private final FilmService filmService;
     private Integer count;
 
@@ -45,7 +44,6 @@ public class FilmController {
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody Film film) {
-        filmValidation.valid(film);
         Film savedFilm = filmService.createFilm(film);
         log.debug("Добавлен фильм :" + savedFilm);
         return savedFilm;
@@ -53,7 +51,6 @@ public class FilmController {
 
     @PutMapping
     public Film putFilm(@Valid @RequestBody Film film) {
-        filmValidation.valid(film);
         Film savedFilm = filmService.updateFilm(film);
         log.debug("Изменен фильм :" + savedFilm);
         return savedFilm;

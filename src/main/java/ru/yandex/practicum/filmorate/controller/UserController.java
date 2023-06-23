@@ -17,7 +17,6 @@ public class UserController {
 
 
     private final UserService userService;
-    private final UserValidation userValidation = new UserValidation();
 
     @Autowired
     public UserController(UserService userService) {
@@ -38,7 +37,6 @@ public class UserController {
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
-        userValidation.valid(user);
         User savedUser = userService.create(user);
         log.debug("Добавлен пользователь :" + savedUser);
         return savedUser;
@@ -46,7 +44,6 @@ public class UserController {
 
     @PutMapping
     public User putUser(@Valid @RequestBody User user) {
-        userValidation.valid(user);
         User savedUser = userService.update(user);
         log.debug("Изменен пользователь :" + savedUser);
         return savedUser;

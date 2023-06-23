@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,18 +25,14 @@ class UserControllerTest {
 
     @Test
     void validateUserNameIsBlank() {
-        UserService userService = new UserService();
-        UserController userController = new UserController(userService);
-        User user = new User("andr", "", 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29), new HashSet<>());
+        User user = new User("andr", "", 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29));
         userValidation.valid(user);
         assertEquals(user.getName(), user.getLogin());
     }
 
     @Test
     void validateUserNameIsNull() {
-        UserService userService = new UserService();
-        UserController userController = new UserController(userService);
-        User user = new User("andr", null, 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29), new HashSet<>());
+        User user = new User("andr", null, 1, "andr@yandex.ru", LocalDate.of(1979, 07, 29));
         userValidation.valid(user);
         assertEquals(user.getName(), user.getLogin());
     }

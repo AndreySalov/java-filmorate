@@ -11,7 +11,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validation.FilmValidation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Getter
@@ -19,7 +22,7 @@ import java.util.*;
 public class InMemoryFilmStorage implements FilmStorage {
     private final FilmValidation filmValidation = new FilmValidation();
     private final Logger log = LoggerFactory.getLogger(FilmController.class);
-    private Map<Integer, Film> films = new HashMap<>();
+    private final Map<Integer, Film> films = new HashMap<>();
     private int currentId;
 
     @Override
@@ -27,8 +30,6 @@ public class InMemoryFilmStorage implements FilmStorage {
         filmValidation.valid(film);
         int newId = getNewId();
         film.setId(newId);
-        if (film.getLikes() == null)
-            film.setLikes(new HashSet<>());
         films.put(newId, film);
         log.info("Добавлен фильм id=" + newId);
         return film;
@@ -45,8 +46,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film updateFilm(Film film) {
         if (films.containsKey(film.getId())) {
             filmValidation.valid(film);
-            if (film.getLikes() == null)
-                film.setLikes(new HashSet<>());
             films.put(film.getId(), film);
             log.info("Изменен фильм c id=" + film.getId());
         } else

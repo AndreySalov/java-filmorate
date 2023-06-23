@@ -10,7 +10,10 @@ import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Getter
@@ -37,7 +40,6 @@ public class InMemoryUserStorage implements UserStorage {
         userValidation.valid(user);
         int newId = getNewId();
         user.setId(newId);
-        user.setFriends(new HashSet<>());
         users.put(newId, user);
         log.info("Добавлен пользователь. id=" + newId);
         return user;
@@ -48,8 +50,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(user.getId())) {
             userValidation.valid(user);
             users.put(user.getId(), user);
-            if (user.getFriends() == null)
-                user.setFriends(new HashSet<>());
             log.info("Изменен пользователь c id=" + user.getId());
         } else
             throw new NotFoundException("Пользователь с таким id не найден");
