@@ -9,12 +9,14 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class FilmService {
     @Autowired
     private UserService userService;
     @Autowired
     private FilmStorage inMemoryFilmStorage;
+
     public Film getFilm(int filmId) {
         Film film = inMemoryFilmStorage.getFilm(filmId);
         return film;
@@ -32,7 +34,6 @@ public class FilmService {
     public Film createFilm(Film film) {
         return inMemoryFilmStorage.create(film);
     }
-
 
 
     public void addLike(int userId, int filmId) {
