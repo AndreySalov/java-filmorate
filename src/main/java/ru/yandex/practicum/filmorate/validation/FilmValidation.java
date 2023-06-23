@@ -8,7 +8,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.time.LocalDate;
 
 public class FilmValidation {
-    static final private LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
+    //Тесты на гите не пропускают. 'private' modifier out of order with the JLS suggestions. Не понимаю, что ему нужно
+    private final  LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
 
     private final Logger log = LoggerFactory.getLogger(FilmValidation.class);
 
