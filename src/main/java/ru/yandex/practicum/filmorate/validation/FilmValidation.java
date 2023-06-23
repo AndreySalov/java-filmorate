@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class FilmValidation {
     //Тесты на гите не пропускают. 'private' modifier out of order with the JLS suggestions. Не понимаю, что ему нужно
-    static final  LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
+    static final LocalDate MIN_DATE = LocalDate.of(1895, 12, 28);
 
     private final Logger log = LoggerFactory.getLogger(FilmValidation.class);
 
