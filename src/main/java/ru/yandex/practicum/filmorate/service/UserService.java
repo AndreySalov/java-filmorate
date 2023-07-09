@@ -4,26 +4,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    @Autowired
-    private final UserStorage inMemoryUserStorage = new InMemoryUserStorage();
     private final UserValidation userValidation = new UserValidation();
+    @Autowired
+    private final UserStorage userStorage;
+
+    @Autowired
+    public UserService(UserStorage storage) {
+        this.userStorage = storage;
+    }
 
     public List<User> getAllUsers() {
-        List<User> usersList = inMemoryUserStorage.getAllUsers();
+        List<User> usersList = userStorage.getAllUsers();
         return usersList;
     }
 
     public User getUser(int userId) {
-        User user = inMemoryUserStorage.getUser(userId);
+        User user = userStorage.getUser(userId);
         if (user == null)
             throw new NotFoundException("Пользователь с id = " + userId + " не найден.");
         return user;
@@ -31,42 +36,45 @@ public class UserService {
 
     public User create(User user) {
         userValidation.valid(user);
-        return inMemoryUserStorage.create(user);
+        return userStorage.create(user);
     }
 
     public User update(User user) {
         userValidation.valid(user);
-        return inMemoryUserStorage.updateUser(user);
+        return userStorage.updateUser(user);
     }
 
     public void addFriend(int userId, int friendId) {
         User user = getUser(userId);
-        if (user.getFriends().contains(friendId)) {
+        if (user.getFriends().containsKey(friendId)) {
             deleteFriend(userId, friendId);
         }
         User friend = getUser(friendId);
-        inMemoryUserStorage.addFriend(user, friend);
+        userStorage.addFriend(user, friend, false);
     }
 
     public void deleteFriend(int userId, int friendId) {
         User user = getUser(userId);
         User friend = getUser(friendId);
-        inMemoryUserStorage.deleteFriend(user, friend);
+        userStorage.deleteFriend(user, friend);
     }
 
     public List<User> getFriends(int userId) {
         final User user = getUser(userId);
-        return user.getFriends().stream()
-                .map(inMemoryUserStorage::getUser)
-                .collect(Collectors.toList());
+        List<User> friends = new ArrayList<>();
+        for (int friendId : user.getFriends().keySet()) {
+            User friend = getUser(friendId);
+            friends.add(friend);
+        }
+        return friends;
     }
 
 
     public List<User> getFriendsOtherUser(int userId, int friendId) {
         User user = getUser(userId);
         User friend = getUser(friendId);
-        return user.getFriends().stream().filter(id -> friend.getFriends().contains(id))
-                .map(inMemoryUserStorage::getUser)
+        return user.getFriends().keySet().stream().filter(id -> friend.getFriends().containsKey(id))
+                .map(userStorage::getUser)
                 .collect(Collectors.toList());
     }
 }

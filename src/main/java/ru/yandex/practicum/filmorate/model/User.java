@@ -7,8 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 
 @Data
 @Getter
@@ -28,6 +27,5 @@ public class User {
     @NonNull
     private LocalDate birthday;
     @JsonIgnore
-    private final Set<Integer> friends = new HashSet<>();
-
+    private Map<Integer, Boolean> friends;
 }
