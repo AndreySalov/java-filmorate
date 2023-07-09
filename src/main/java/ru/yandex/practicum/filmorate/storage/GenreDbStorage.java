@@ -22,11 +22,11 @@ public class GenreDbStorage {
         final String QUERY = "SELECT GENRE_ID,\n" +
                 "       NAME\n" +
                 "FROM GENRE";
-        SqlRowSet GenreRows = jdbcTemplate.queryForRowSet(QUERY);
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(QUERY);
         List<Genre> genres = new LinkedList<>();
-        while (GenreRows.next()) {
-            genres.add(createInMemory(GenreRows.getInt("GENRE_ID"),
-                    GenreRows.getString("NAME")));
+        while (genreRows.next()) {
+            genres.add(createInMemory(genreRows.getInt("GENRE_ID"),
+                    genreRows.getString("NAME")));
         }
 
         return genres;
