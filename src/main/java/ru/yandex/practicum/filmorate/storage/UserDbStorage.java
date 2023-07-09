@@ -1,31 +1,27 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 
-import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 @Component
 @Qualifier("UserDbStorage")
 @Primary
-public class UserDbStorage implements UserStorage{
+public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
     private final UserValidation userValidation = new UserValidation();
+
     @Autowired
-    public UserDbStorage(JdbcTemplate jdbcTemplate){
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -97,6 +93,7 @@ public class UserDbStorage implements UserStorage{
         }
         return friends;
     }
+
     public List<User> getFriendsOtherUser(Integer friendId1, Integer friendId2) {
         // Сформируем запрос получения идентификаторов общих друзей.
         final String SQL_QUERY = "SELECT FRIENDS.INCOMING_USER_ID " +
@@ -116,15 +113,16 @@ public class UserDbStorage implements UserStorage{
 
         return friends;
     }
+
     @Override
-    public void addFriend(User user, User friend , boolean status) {
+    public void addFriend(User user, User friend, boolean status) {
         getUser(user.getId());
         getUser(friend.getId());
         String sqlQuery =
                 "INSERT " +
                         "INTO friends (outgoing_user_id,incoming_user_id,  status) " +
                         "VALUES(?, ? , ?)";
-        jdbcTemplate.update(sqlQuery, user.getId(), friend.getId() , String.valueOf(status));
+        jdbcTemplate.update(sqlQuery, user.getId(), friend.getId(), String.valueOf(status));
     }
 
     @Override
@@ -164,7 +162,7 @@ public class UserDbStorage implements UserStorage{
         return users;
     }
 
-     private Map<String, Object> toMap(User user) {
+    private Map<String, Object> toMap(User user) {
         Map<String, Object> values = new HashMap<>();
         values.put("email", user.getEmail());
         values.put("login", user.getLogin());
