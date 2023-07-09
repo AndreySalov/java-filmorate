@@ -66,10 +66,10 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).
-                withTableName("FILMS").
-                usingGeneratedKeyColumns("FILM_ID").
-                usingColumns("NAME",
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("FILMS")
+                .usingGeneratedKeyColumns("FILM_ID")
+                .usingColumns("NAME",
                         "DESCRIPTION",
                         "RELEASE_DATE",
                         "DURATION",
