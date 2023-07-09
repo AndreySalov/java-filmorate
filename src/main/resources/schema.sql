@@ -12,7 +12,7 @@ create table IF NOT EXISTS USERS
 (
     USER_ID  INTEGER auto_increment,
     EMAIL    VARCHAR(64) not null unique,
-    LOGIN    VARCHAR(64) not null,
+    LOGIN    VARCHAR(64) not null unique,
     NAME     VARCHAR(64) not null,
     BIRTHDAY TIMESTAMP            not null,
     constraint USER_TABLE_PK
@@ -23,7 +23,6 @@ create table IF NOT EXISTS FRIENDS
 (
     OUTGOING_USER_ID INTEGER not null,
     INCOMING_USER_ID INTEGER not null,
-    STATUS           VARCHAR(64) not null,
     constraint FRIENDS_PK
         primary key (OUTGOING_USER_ID, INCOMING_USER_ID),
     constraint FRIENDS_USERS_USER_ID_FK
@@ -54,7 +53,7 @@ create table IF NOT EXISTS FILMS
     NAME         VARCHAR(64) not null unique,
     DESCRIPTION  VARCHAR(64) not null,
     RELEASE_DATE TIMESTAMP            not null,
-    DURATION     VARCHAR(64) not null,
+    DURATION     INTEGER not null,
     RATE         INTEGER,
     MPA_ID       INTEGER              not null,
     constraint FILM_PK

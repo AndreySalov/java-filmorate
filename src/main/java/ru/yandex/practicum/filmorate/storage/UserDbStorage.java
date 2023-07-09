@@ -28,7 +28,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User getUser(int userId) {
         String sqlQuery =
-                "SELECT u.user_id, u.email, u.login, u.name, u.birthday , f.incoming_user_id , f.status " +
+                "SELECT u.user_id, u.email, u.login, u.name, u.birthday , f.incoming_user_id  " +
                         "FROM users u LEFT JOIN FRIENDS f ON u.user_id = f.outgoing_user_id " +
                         "WHERE u.user_id=?";
 
@@ -43,7 +43,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getAllUsers() {
         String sqlQuery =
-                "SELECT u.user_id, u.email, u.login, u.name, u.birthday , f.incoming_user_id , f.status " +
+                "SELECT u.user_id, u.email, u.login, u.name, u.birthday , f.incoming_user_id  " +
                         "FROM users u LEFT JOIN FRIENDS f ON u.user_id = f.outgoing_user_id ORDER BY u.user_id";
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlQuery);
         // Сформируем пользователей по результатам запроса.
@@ -77,19 +77,17 @@ public class UserDbStorage implements UserStorage {
         throw new NotFoundException("Пользователь не найден.");
     }
 
-    public Map<Integer, Boolean> getFriends(User user) {
+    public List<User> getFriends(User user) {
         // Сформируем запрос выборки друзей пользователя.
-        final String SQL_QUERY = "SELECT INCOMING_USER_ID,\n" +
-                "       STATUS\n" +
+        final String SQL_QUERY = "SELECT INCOMING_USER_ID\n" +
                 "FROM FRIENDS\n" +
                 "WHERE OUTGOING_USER_ID = ?";
         // Обработаем запрос.
         SqlRowSet friendRows = jdbcTemplate.queryForRowSet(SQL_QUERY, user.getId());
-        Map<Integer, Boolean> friends = new HashMap<>();
+        List<User> friends = new ArrayList<>();
         while (friendRows.next()) {
             Integer friendId = friendRows.getInt("INCOMING_USER_ID");
-            Boolean status = friendRows.getBoolean("STATUS");
-            friends.put(friendId, status);
+            friends.add(getUser(friendId));
         }
         return friends;
     }
@@ -115,14 +113,14 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(User user, User friend, boolean status) {
+    public void addFriend(User user, User friend) {
         getUser(user.getId());
         getUser(friend.getId());
         String sqlQuery =
                 "INSERT " +
-                        "INTO friends (outgoing_user_id,incoming_user_id,  status) " +
-                        "VALUES(?, ? , ?)";
-        jdbcTemplate.update(sqlQuery, user.getId(), friend.getId(), String.valueOf(status));
+                        "INTO friends (outgoing_user_id,incoming_user_id) " +
+                        "VALUES(?, ?)";
+        jdbcTemplate.update(sqlQuery, user.getId(), friend.getId());
     }
 
     @Override
@@ -156,7 +154,7 @@ public class UserDbStorage implements UserStorage {
             if (friendId != 0) {
                 // Есть данные о друге. Добавим их.
                 Map<Integer, Boolean> friends = users.get(users.size() - 1).getFriends();
-                friends.put(friendId, Boolean.valueOf(userRows.getString("status")));
+                friends.put(friendId, true);
             }
         }
         return users;
