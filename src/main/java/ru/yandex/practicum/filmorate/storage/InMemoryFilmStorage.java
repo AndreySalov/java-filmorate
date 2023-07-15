@@ -68,6 +68,11 @@ public class InMemoryFilmStorage implements FilmStorage {
         film.getLikes().remove(user.getId());
     }
 
+    @Override
+    public List<Film> getPopular(Integer count) {
+        return null;
+    }
+
     private int getNewId() {
         return ++currentId;
     }
